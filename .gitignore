@@ -1,0 +1,115 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.log
+
+## User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.vspscc
+*.vssscc
+*.sdf
+*.cache
+*.dbmdl
+
+## Rider-specific
+.idea/
+
+## Visual Studio Code
+.vscode/
+
+## Visual Studio
+.vs/
+
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+## DotCover
+*.dotCover
+
+## StyleCop
+StyleCopReport.xml
+
+## NUnit
+*.VisualState.xml
+TestResult.xml
+TestResult-*.xml
+
+## Build results
+*.dll
+*.exe
+*.app
+*.out
+*.appx
+*.msix
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+.project.json
+*.psmdcp
+.nuget/
+packages/
+**/packages/*
+!**/packages/build/
+!**/packages/repositories.config
+
+## Tye (for microservices orchestration)
+.tye/
+
+## Microsoft Azure
+*.azurePubxml
+*.Publish.xml
+*.pubxml
+*.publishproj
+
+## Entity Framework
+Migrations/
+
+## Logs
+*.log
+logs/
+
+## Database
+*.mdf
+*.ldf
+*.ndf
+*.sqlite
+
+## Secrets
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+
+## Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.~*
+
+## OS generated
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+## JetBrains Rider
+.idea/
+
+## Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.cov
+*.testsettings
+*.vsmdi
+
+## dotnet tools
+.tools/

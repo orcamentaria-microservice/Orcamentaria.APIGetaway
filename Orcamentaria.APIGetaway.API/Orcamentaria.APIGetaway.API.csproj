@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Keys\public_key_user.pem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Keys\public_key_user.pem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.2.4" />
+    <PackageReference Include="Orcamentaria.Lib.Infrastructure" Version="4.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Orcamentaria.APIGetaway.Application\Orcamentaria.APIGetaway.Application.csproj" />
+  </ItemGroup>
+
+</Project>
