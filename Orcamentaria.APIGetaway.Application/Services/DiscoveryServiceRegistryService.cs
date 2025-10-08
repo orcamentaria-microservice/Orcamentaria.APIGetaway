@@ -27,21 +27,25 @@ namespace Orcamentaria.APIGetaway.Application.Services
 
         public async Task<Response<IEnumerable<ServiceRegistry>>> GetService(string serviceName)
         {
-            var endpointListEndpoints = _serviceRegistryConfiguration.Value.Endpoints.First(x => x.Name == "ListEndpoints");
-
-            var newendpointListEndpoints = new ServiceRegistryConfigurationEndpoint
+            try
             {
-                Name = endpointListEndpoints.Name,
-                Method = endpointListEndpoints.Method,
-                Order = endpointListEndpoints.Order,
-                Route = endpointListEndpoints.Route,
-                RequiredAuthorization = endpointListEndpoints.RequiredAuthorization
-            };
+                var endpointListEndpoints = _serviceRegistryConfiguration.Value.Endpoints
+                    .FirstOrDefault(x => x.Name == "ListEndpoints");
+
+                if (endpointListEndpoints is null)
+                    throw new Exception();
+
+                var newendpointListEndpoints = new ServiceRegistryConfigurationEndpoint
+                {
+                    Name = endpointListEndpoints.Name,
+                    Method = endpointListEndpoints.Method,
+                    Order = endpointListEndpoints.Order,
+                    Route = endpointListEndpoints.Route,
+                    RequiredAuthorization = endpointListEndpoints.RequiredAuthorization
+                };
 
             endpointListEndpoints.Route = endpointListEndpoints.Route.Replace("{serviceName}", serviceName);
 
-            try
-            {
                 var response = await _serviceRegistryService.SendServiceRegister<IEnumerable<ServiceRegistry>>(
                         baseUrl: _serviceRegistryConfiguration.Value.BaseUrl,
                         endpoint: endpointListEndpoints);
@@ -50,7 +54,7 @@ namespace Orcamentaria.APIGetaway.Application.Services
             }
             catch (Exception ex)
             {
-                return new Response<IEnumerable<ServiceRegistry>>(ResponseErrorEnum.InternalError, ex.Message);
+                return new Response<IEnumerable<ServiceRegistry>>(ErrorCodeEnum.InternalError, ex.Message);
             }
         }
 
@@ -80,7 +84,7 @@ namespace Orcamentaria.APIGetaway.Application.Services
             }
             catch (Exception ex)
             {
-                return new Response<IEnumerable<ServiceRegistry>>(ResponseErrorEnum.InternalError, ex.Message);
+                throw;
             }
         }
     

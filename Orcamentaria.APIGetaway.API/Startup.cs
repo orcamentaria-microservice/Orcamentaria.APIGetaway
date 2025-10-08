@@ -2,7 +2,6 @@
 using Orcamentaria.APIGetaway.Application.Services;
 using Orcamentaria.APIGetaway.Domain.Services;
 using Orcamentaria.Lib.Application.Services;
-using Orcamentaria.Lib.Domain;
 using Orcamentaria.Lib.Domain.Providers;
 using Orcamentaria.Lib.Domain.Services;
 using Orcamentaria.Lib.Infrastructure;
@@ -23,13 +22,13 @@ namespace Orcamentaria.APIGetaway.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            CommonDI.ResolveCommonServices(_serviceName, _apiVersion, services, Configuration);
-
-            services.AddScoped<ITokenProvider, TokenProvider>();
-
-            services.AddScoped<IDiscoveryServiceRegistryService, DiscoveryServiceRegistryService>();
-            services.AddScoped<IRoutingService, RoutingService>();
-            services.AddScoped<ILoadBalancer, LoadBalancerResponseTimeService>();
+            CommonDI.ResolveCommonServices(_serviceName, _apiVersion, services, Configuration, () =>
+            {
+                services.AddScoped<ITokenProvider, TokenProvider>();
+                services.AddScoped<IDiscoveryServiceRegistryService, DiscoveryServiceRegistryService>();
+                services.AddScoped<IRoutingService, RoutingService>();
+                services.AddScoped<ILoadBalancer, LoadBalancerResponseTimeService>();
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

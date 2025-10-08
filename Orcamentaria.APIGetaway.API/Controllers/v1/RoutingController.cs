@@ -18,11 +18,15 @@ namespace Orcamentaria.AuthService.API.Controllers.v1
 
         [HttpPost(Name = "Routing")]
         public async Task<Response<dynamic>> Discovery([FromBody] RequestDTO dto)
-            => await _service.RoutingRequest(dto);
-
-        //[HttpPost("Test", Name = "Test")]
-        //public async Task<Response<dynamic>> Test([FromBody] RequestDTO dto)
-        //    => await _service.Test(dto);
-
+        {
+            try
+            {
+                return await _service.RoutingRequest(dto);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.2.4" />
-    <PackageReference Include="Orcamentaria.Lib.Infrastructure" Version="4.2.2" />
+    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.5.1" />
+    <PackageReference Include="Orcamentaria.Lib.Infrastructure" Version="4.5.7" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,8 +1,9 @@
 ﻿using Orcamentaria.APIGetaway.Domain.DTOs;
 using Orcamentaria.APIGetaway.Domain.Services;
-using Orcamentaria.Lib.Domain.Enums;
-using Orcamentaria.Lib.Domain.Models;
 using Orcamentaria.Lib.Domain.Contexts;
+using Orcamentaria.Lib.Domain.Enums;
+using Orcamentaria.Lib.Domain.Exceptions;
+using Orcamentaria.Lib.Domain.Models;
 using Orcamentaria.Lib.Domain.Services;
 
 namespace Orcamentaria.APIGetaway.Application.Services
@@ -13,58 +14,67 @@ namespace Orcamentaria.APIGetaway.Application.Services
         private readonly IHttpClientService _httpClientService;
         private readonly IUserAuthContext _userAuthContext;
         private readonly ILoadBalancer _loadBalancer;
+        private readonly IRequestContext _requestContext;
 
         public RoutingService(
             IDiscoveryServiceRegistryService discoveryServiceRegistryService,
             IHttpClientService httpClientService,
             IUserAuthContext userAuthContext,
-            ILoadBalancer loadBalancer)
+            ILoadBalancer loadBalancer,
+            IRequestContext requestContext)
         {
             _discoveryServiceRegistryService = discoveryServiceRegistryService;
             _httpClientService = httpClientService;
             _userAuthContext = userAuthContext;
             _loadBalancer = loadBalancer;
+            _requestContext = requestContext;
         }
 
         public async Task<Response<dynamic>> RoutingRequest(RequestDTO dto)
         {
-            var responseDiscover = await _discoveryServiceRegistryService.DiscoverServiceRegistry(dto.ServiceName, dto.EndpointName);
-
-            if (!responseDiscover.Success)
-                return new Response<dynamic>(responseDiscover.Error, responseDiscover.SimpleMessage);
-
-            var service = _loadBalancer.GetNextService(responseDiscover.Data.Where(x => x.State.StateId == StateEnum.UP));
-
-            if(service is null)
-                return new Response<dynamic>(ResponseErrorEnum.NotFound, "Nenhum serviço ativo.");
-
-            var endpoint = service.Endpoints.First();
-            endpoint.Order = service.Order;
-
-            foreach (var param in dto.Params)
-            {
-                endpoint.Route = endpoint.Route.Replace($"{{{param.ParamName}}}", param.ParamValue);
-            }
-
-            if(endpoint.Route.Contains("{") || endpoint.Route.Contains("}"))
-                return new Response<dynamic>(ResponseErrorEnum.ValidationFailed, "Parâmetros inválidos.");
-
             try
             {
-                var response = await _httpClientService.SendAsync<Response<dynamic>>(service.BaseUrl, endpoint, _userAuthContext.UserToken, dto.Content);
+                var responseDiscover = await _discoveryServiceRegistryService.DiscoverServiceRegistry(dto.ServiceName, dto.EndpointName);
+
+                if (!responseDiscover.Success)
+                    throw new Exception(responseDiscover.SimpleMessage);
+
+                var service = _loadBalancer.GetNextService(responseDiscover.Data.Where(x => x.State.StateId == StateEnum.UP));
+
+                if (service is null)
+                    return new Response<dynamic>(ErrorCodeEnum.NotFound, "Nenhum serviço ativo.");
+
+                var endpoint = service.Endpoints.First();
+                endpoint.Order = service.Order;
+
+                foreach (var param in dto.Params)
+                {
+                    endpoint.Route = endpoint.Route.Replace($"{{{param.ParamName}}}", param.ParamValue);
+                }
+
+                if (endpoint.Route.Contains("{") || endpoint.Route.Contains("}"))
+                    return new Response<dynamic>(ErrorCodeEnum.ValidationFailed, "Parâmetros inválidos.");
+
+                var response = await _httpClientService.SendAsync<Response<dynamic>>(
+                    baseUrl: service.BaseUrl,
+                    endpoint: endpoint,
+                    options: new OptionsRequest
+                    {
+                        TokenAuth = _userAuthContext.UserToken,
+                        Content = dto.Content
+                    });
 
                 _loadBalancer.RegisterUsedService(service, response);
 
-                if (!response.Success)
-                {
-                    return new Response<dynamic>((ResponseErrorEnum)response.StatusCode, response.MessageError);
-                }
-
                 return response.Content;
+            }
+            catch (DefaultException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                return new Response<dynamic>(ResponseErrorEnum.InternalError, ex.Message);
+                throw new UnexpectedException(ex.Message, ex);
             }
         }
     }
