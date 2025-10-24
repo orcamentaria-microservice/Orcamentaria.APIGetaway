@@ -8,16 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Keys\public_key_user.pem" />
+    <None Remove="Keys\public_key_service.pem" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Keys\public_key_service.pem" />
     <EmbeddedResource Include="Keys\public_key_user.pem" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.5.1" />
-    <PackageReference Include="Orcamentaria.Lib.Infrastructure" Version="4.5.7" />
+    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.5.9" />
+    <PackageReference Include="Orcamentaria.Lib.Infrastructure" Version="4.7.2" />
   </ItemGroup>
 
   <ItemGroup>

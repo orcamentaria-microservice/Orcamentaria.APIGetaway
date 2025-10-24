@@ -1,7 +1,6 @@
 ﻿using Orcamentaria.APIGetaway.Application.Providers;
 using Orcamentaria.APIGetaway.Application.Services;
 using Orcamentaria.APIGetaway.Domain.Services;
-using Orcamentaria.Lib.Application.Services;
 using Orcamentaria.Lib.Domain.Providers;
 using Orcamentaria.Lib.Domain.Services;
 using Orcamentaria.Lib.Infrastructure;

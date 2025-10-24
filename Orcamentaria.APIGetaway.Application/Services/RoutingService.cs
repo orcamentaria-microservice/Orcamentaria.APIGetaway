@@ -14,20 +14,17 @@ namespace Orcamentaria.APIGetaway.Application.Services
         private readonly IHttpClientService _httpClientService;
         private readonly IUserAuthContext _userAuthContext;
         private readonly ILoadBalancer _loadBalancer;
-        private readonly IRequestContext _requestContext;
 
         public RoutingService(
             IDiscoveryServiceRegistryService discoveryServiceRegistryService,
             IHttpClientService httpClientService,
             IUserAuthContext userAuthContext,
-            ILoadBalancer loadBalancer,
-            IRequestContext requestContext)
+            ILoadBalancer loadBalancer)
         {
             _discoveryServiceRegistryService = discoveryServiceRegistryService;
             _httpClientService = httpClientService;
             _userAuthContext = userAuthContext;
             _loadBalancer = loadBalancer;
-            _requestContext = requestContext;
         }
 
         public async Task<Response<dynamic>> RoutingRequest(RequestDTO dto)
