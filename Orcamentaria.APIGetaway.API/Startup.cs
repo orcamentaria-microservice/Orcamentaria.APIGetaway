@@ -2,7 +2,6 @@
 using Orcamentaria.APIGetaway.Application.Services;
 using Orcamentaria.APIGetaway.Domain.Services;
 using Orcamentaria.Lib.Domain.Providers;
-using Orcamentaria.Lib.Domain.Services;
 using Orcamentaria.Lib.Infrastructure;
 
 namespace Orcamentaria.APIGetaway.API
@@ -17,20 +16,22 @@ namespace Orcamentaria.APIGetaway.API
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
             CommonDI.ResolveCommonServices(_serviceName, _apiVersion, services, Configuration, () =>
             {
                 services.AddScoped<ITokenProvider, TokenProvider>();
-                services.AddScoped<IDiscoveryServiceRegistryService, DiscoveryServiceRegistryService>();
+                services.AddScoped<IServiceRecordDiscoveryService, ServiceRecordDiscoveryService>();
                 services.AddScoped<IRoutingService, RoutingService>();
                 services.AddScoped<ILoadBalancer, LoadBalancerResponseTimeService>();
             });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-            => CommonDI.ConfigureCommon(_serviceName, _apiVersion, app, env);
+        {
+            CommonDI.ConfigureCommon(_serviceName, _apiVersion, app, env);
+        }
     }
 }

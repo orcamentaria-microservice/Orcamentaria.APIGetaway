@@ -4,7 +4,7 @@ namespace Orcamentaria.APIGetaway.Application.Providers
 {
     public class TokenProvider : ITokenProvider
     {
-        public Task<string> GetTokenServiceAsync()
+        public Task<string> GetTokenAsync()
             => Task.FromResult("_blanck");
     }
 }

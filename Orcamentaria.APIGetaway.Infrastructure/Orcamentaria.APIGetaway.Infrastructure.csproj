@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Orcamentaria.Lib.Application" Version="1.7.9" />
+    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.5.9" />
+    <PackageReference Include="Orcamentaria.Lib.Infrastructure" Version="4.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Orcamentaria.APIGetaway.Application\Orcamentaria.APIGetaway.Application.csproj" />
+  </ItemGroup>
+
+</Project>

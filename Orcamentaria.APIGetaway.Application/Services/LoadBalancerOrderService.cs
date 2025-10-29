@@ -1,5 +1,4 @@
-﻿using Orcamentaria.APIGetaway.Domain.Models;
-using Orcamentaria.APIGetaway.Domain.Services;
+﻿using Orcamentaria.APIGetaway.Domain.Services;
 using Orcamentaria.Lib.Domain.Models;
 using Orcamentaria.Lib.Domain.Services;
 

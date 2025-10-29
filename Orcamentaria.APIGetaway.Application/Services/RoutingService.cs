@@ -10,20 +10,23 @@ namespace Orcamentaria.APIGetaway.Application.Services
 {
     public class RoutingService : IRoutingService
     {
-        private readonly IDiscoveryServiceRegistryService _discoveryServiceRegistryService;
+        private readonly IServiceRecordDiscoveryService _discoveryServiceRegistryService;
         private readonly IHttpClientService _httpClientService;
         private readonly IUserAuthContext _userAuthContext;
+        private readonly IServiceAuthContext _serviceAuthContext;
         private readonly ILoadBalancer _loadBalancer;
 
         public RoutingService(
-            IDiscoveryServiceRegistryService discoveryServiceRegistryService,
+            IServiceRecordDiscoveryService discoveryServiceRegistryService,
             IHttpClientService httpClientService,
             IUserAuthContext userAuthContext,
+            IServiceAuthContext serviceAuthContext,
             ILoadBalancer loadBalancer)
         {
             _discoveryServiceRegistryService = discoveryServiceRegistryService;
             _httpClientService = httpClientService;
             _userAuthContext = userAuthContext;
+            _serviceAuthContext = serviceAuthContext;
             _loadBalancer = loadBalancer;
         }
 
@@ -31,7 +34,7 @@ namespace Orcamentaria.APIGetaway.Application.Services
         {
             try
             {
-                var responseDiscover = await _discoveryServiceRegistryService.DiscoverServiceRegistry(dto.ServiceName, dto.EndpointName);
+                var responseDiscover = await _discoveryServiceRegistryService.DiscoverServiceRegistryWithEnpoint(dto.ServiceName, dto.EndpointName);
 
                 if (!responseDiscover.Success)
                     throw new Exception(responseDiscover.SimpleMessage);
@@ -52,12 +55,14 @@ namespace Orcamentaria.APIGetaway.Application.Services
                 if (endpoint.Route.Contains("{") || endpoint.Route.Contains("}"))
                     return new Response<dynamic>(ErrorCodeEnum.ValidationFailed, "Parâmetros inválidos.");
 
+                var jwtToken = _userAuthContext.UserToken ?? _serviceAuthContext.ServiceToken;
+
                 var response = await _httpClientService.SendAsync<Response<dynamic>>(
                     baseUrl: service.BaseUrl,
                     endpoint: endpoint,
                     options: new OptionsRequest
                     {
-                        TokenAuth = _userAuthContext.UserToken,
+                        TokenAuth = jwtToken,
                         Content = dto.Content
                     });
 
