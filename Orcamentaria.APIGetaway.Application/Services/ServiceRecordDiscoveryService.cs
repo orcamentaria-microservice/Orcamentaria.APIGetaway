@@ -3,6 +3,7 @@ using Orcamentaria.APIGetaway.Domain.Services;
 using Orcamentaria.Lib.Domain.Enums;
 using Orcamentaria.Lib.Domain.Models;
 using Orcamentaria.Lib.Domain.Models.Configurations;
+using Orcamentaria.Lib.Domain.Models.Responses;
 using Orcamentaria.Lib.Domain.Services;
 
 namespace Orcamentaria.APIGetaway.Application.Services

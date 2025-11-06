@@ -2,6 +2,7 @@
 using Orcamentaria.APIGetaway.Domain.DTOs;
 using Orcamentaria.APIGetaway.Domain.Services;
 using Orcamentaria.Lib.Domain.Models;
+using Orcamentaria.Lib.Domain.Models.Responses;
 
 namespace Orcamentaria.AuthService.API.Controllers.v1
 {

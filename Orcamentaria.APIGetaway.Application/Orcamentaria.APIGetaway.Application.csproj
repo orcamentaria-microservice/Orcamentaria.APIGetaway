@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.7.3" />
+    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.9.4" />
   </ItemGroup>
 
   <ItemGroup>

@@ -52,14 +52,7 @@ dotnet run --project Orcamentaria.APIGetaway.API
 ### RoutingController
 - **POST** `/api/v1/Routing` — encaminha a requisição conforme as regras do Gateway (descoberta via Service Registry).
 
-Payload de exemplo (RequestDTO) esperado pelo roteador deve conter informações como **serviceName**, **endpointName**, **httpMethod**, **pathParams**/**query**/**body** (ver implementação do `RoutingService`).
-
----
-
-## 🔐 Considerações de segurança
-- O Gateway **não deve** aceitar tokens de usuário para rotas internas de configuração; use **token de serviço** quando necessário.
-- Valide **método/rota** antes de encaminhar para evitar _open proxy_.
-- **Timeouts e circuit breakers** são recomendados (Polly/HttpClientFactory).
+Payload de exemplo (RequestDTO) esperado pelo roteador deve conter informações como **ServiceName**, **EndpointName**, **Params**, **Content**
 
 ---
 

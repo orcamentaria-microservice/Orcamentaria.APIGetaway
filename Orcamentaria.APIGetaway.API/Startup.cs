@@ -30,8 +30,6 @@ namespace Orcamentaria.APIGetaway.API
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            CommonDI.ConfigureCommon(_serviceName, _apiVersion, app, env);
-        }
+            => CommonDI.ConfigureCommon(_serviceName, _apiVersion, app, env);
     }
 }

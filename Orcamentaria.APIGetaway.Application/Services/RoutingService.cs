@@ -4,6 +4,7 @@ using Orcamentaria.Lib.Domain.Contexts;
 using Orcamentaria.Lib.Domain.Enums;
 using Orcamentaria.Lib.Domain.Exceptions;
 using Orcamentaria.Lib.Domain.Models;
+using Orcamentaria.Lib.Domain.Models.Responses;
 using Orcamentaria.Lib.Domain.Services;
 
 namespace Orcamentaria.APIGetaway.Application.Services
@@ -37,12 +38,12 @@ namespace Orcamentaria.APIGetaway.Application.Services
                 var responseDiscover = await _discoveryServiceRegistryService.DiscoverServiceRegistryWithEnpoint(dto.ServiceName, dto.EndpointName);
 
                 if (!responseDiscover.Success)
-                    throw new Exception(responseDiscover.SimpleMessage);
+                    throw new Exception(responseDiscover.Message);
 
                 var service = _loadBalancer.GetNextService(responseDiscover.Data.Where(x => x.State.StateId == StateEnum.UP));
 
                 if (service is null)
-                    return new Response<dynamic>(ErrorCodeEnum.NotFound, "Nenhum serviço ativo.");
+                    return new Response<dynamic>(ErrorCodeEnum.NotFound, $"Nenhum instância do serviço {dto.ServiceName} ativa.");
 
                 var endpoint = service.Endpoints.First();
                 endpoint.Order = service.Order;
@@ -55,9 +56,9 @@ namespace Orcamentaria.APIGetaway.Application.Services
                 if (endpoint.Route.Contains("{") || endpoint.Route.Contains("}"))
                     return new Response<dynamic>(ErrorCodeEnum.ValidationFailed, "Parâmetros inválidos.");
 
-                var jwtToken = _userAuthContext.UserToken ?? _serviceAuthContext.ServiceToken;
+                var jwtToken = _userAuthContext.BearerToken ?? _serviceAuthContext.BearerToken;
 
-                var response = await _httpClientService.SendAsync<Response<dynamic>>(
+                var response = await _httpClientService.SendAsync<dynamic>(
                     baseUrl: service.BaseUrl,
                     endpoint: endpoint,
                     options: new OptionsRequest

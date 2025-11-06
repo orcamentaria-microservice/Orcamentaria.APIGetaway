@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
-    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.7.3" />
+    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.9.4" />
   </ItemGroup>
 
 </Project>
