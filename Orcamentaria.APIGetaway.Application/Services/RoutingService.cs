@@ -38,23 +38,26 @@ namespace Orcamentaria.APIGetaway.Application.Services
                 var responseDiscover = await _discoveryServiceRegistryService.DiscoverServiceRegistryWithEnpoint(dto.ServiceName, dto.EndpointName);
 
                 if (!responseDiscover.Success)
-                    throw new Exception(responseDiscover.Message);
+                    throw new UnexpectedException(responseDiscover.Message);
 
                 var service = _loadBalancer.GetNextService(responseDiscover.Data.Where(x => x.State.StateId == StateEnum.UP));
 
                 if (service is null)
-                    return new Response<dynamic>(ErrorCodeEnum.NotFound, $"Nenhum instância do serviço {dto.ServiceName} ativa.");
+                    throw new ServiceUnavailableException($"Nenhum instância do serviço {dto.ServiceName} ativa.");
 
                 var endpoint = service.Endpoints.First();
                 endpoint.Order = service.Order;
 
-                foreach (var param in dto.Params)
+                if (dto.Params is not null)
                 {
-                    endpoint.Route = endpoint.Route.Replace($"{{{param.ParamName}}}", param.ParamValue);
+                    foreach (var param in dto.Params)
+                    {
+                        endpoint.Route = endpoint.Route.Replace($"{{{param.ParamName}}}", param.ParamValue);
+                    }
                 }
 
                 if (endpoint.Route.Contains("{") || endpoint.Route.Contains("}"))
-                    return new Response<dynamic>(ErrorCodeEnum.ValidationFailed, "Parâmetros inválidos.");
+                    throw new ValidationException("Parâmetros inválidos.");
 
                 var jwtToken = _userAuthContext.BearerToken ?? _serviceAuthContext.BearerToken;
 

@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
-    <PackageReference Include="Orcamentaria.Lib.Domain" Version="9.9.4" />
+    <PackageReference Include="AutoMapper" Version="15.1.0" />
+    <PackageReference Include="Orcamentaria.Lib.Domain" Version="10.0.8" />
   </ItemGroup>
 
 </Project>
