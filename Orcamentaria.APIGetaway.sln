@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.8.34330.188
+# Visual Studio Version 18
+VisualStudioVersion = 18.8.12009.203 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcamentaria.APIGetaway.API", "Orcamentaria.APIGetaway.API\Orcamentaria.APIGetaway.API.csproj", "{4A7AE696-AE9D-4067-B9D6-7DB647083365}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcamentaria.APIGetaway.Application", "Orcamentaria.APIGetaway.Application\Orcamentaria.APIGetaway.Application.csproj", "{E28DFCA9-2A2D-418F-9EF5-82D3396C0480}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcamentaria.APIGetaway.Domain", "Orcamentaria.APIGetaway.Domain\Orcamentaria.APIGetaway.Domain.csproj", "{5F8A595F-D180-496A-A297-DBFFEECD1406}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcamentaria.APIGetaway.Test", "Orcamentaria.APIGetaway.Test\Orcamentaria.APIGetaway.Test.csproj", "{2DFE360A-276C-4FE7-B5AA-5375AEC69AD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{5F8A595F-D180-496A-A297-DBFFEECD1406}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F8A595F-D180-496A-A297-DBFFEECD1406}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F8A595F-D180-496A-A297-DBFFEECD1406}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DFE360A-276C-4FE7-B5AA-5375AEC69AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DFE360A-276C-4FE7-B5AA-5375AEC69AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DFE360A-276C-4FE7-B5AA-5375AEC69AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DFE360A-276C-4FE7-B5AA-5375AEC69AD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

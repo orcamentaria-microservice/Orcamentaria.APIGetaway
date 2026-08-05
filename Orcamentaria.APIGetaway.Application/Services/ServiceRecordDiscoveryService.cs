@@ -74,6 +74,6 @@ namespace Orcamentaria.APIGetaway.Application.Services
                 throw;
             }
         }
-    
+
     }
 }
