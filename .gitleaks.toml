@@ -1,0 +1,24 @@
+title = "orcamentaria"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "orcamentaria-bootstrap-secret"
+description = "BOOTSTRAPSECRET com valor"
+regex = '''(?i)BOOTSTRAPSECRET["'\s:=]+["']?[0-9]+\.[A-Za-z0-9_\-]{20,}'''
+
+[[rules]]
+id = "mongodb-uri-with-credentials"
+description = "URI MongoDB com usuário e senha"
+regex = '''mongodb(\+srv)?://[^:\s/]+:[^@\s]+@'''
+
+[[rules]]
+id = "mysql-connection-password"
+description = "Connection string MySQL com senha"
+regex = '''(?i)(server|host)=[^;]+;.*(password|pwd)=[^;"'\s_][^;"'\s]*'''
+
+[allowlist]
+description = "Placeholders"
+regexes = [ '''__SET_BY_ENV__''', '''<<value>>''', '''<[a-z][a-z0-9_-]*>''' ]
+paths = [ '''\.gitleaks-baseline\.json''' ]
