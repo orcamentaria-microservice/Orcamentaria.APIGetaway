@@ -66,8 +66,8 @@ namespace Orcamentaria.APIGetaway.Test.Services
             SetupDiscovery(service, dto);
 
             _mocker.GetMock<ILoadBalancer>()
-                .Setup(l => l.GetNextService(It.IsAny<IEnumerable<ServiceRegistry>>()))
-                .Returns(service);
+                .Setup(l => l.GetNextServiceAsync(It.IsAny<IEnumerable<ServiceRegistry>>()))
+                .ReturnsAsync(service);
 
             var httpResponse = CreateHttpResponse(service.Endpoints.First());
 
@@ -80,7 +80,7 @@ namespace Orcamentaria.APIGetaway.Test.Services
             result.Should().BeSameAs(httpResponse.Content);
 
             _mocker.GetMock<ILoadBalancer>()
-                .Verify(l => l.RegisterUsedService(service, httpResponse), Times.Once);
+                .Verify(l => l.RegisterUsedServiceAsync(service, httpResponse), Times.Once);
         }
 
         [Fact]
@@ -98,8 +98,8 @@ namespace Orcamentaria.APIGetaway.Test.Services
             SetupDiscovery(service, dto);
 
             _mocker.GetMock<ILoadBalancer>()
-                .Setup(l => l.GetNextService(It.IsAny<IEnumerable<ServiceRegistry>>()))
-                .Returns(service);
+                .Setup(l => l.GetNextServiceAsync(It.IsAny<IEnumerable<ServiceRegistry>>()))
+                .ReturnsAsync(service);
 
             var httpResponse = CreateHttpResponse(endpoint);
 
@@ -139,8 +139,8 @@ namespace Orcamentaria.APIGetaway.Test.Services
             SetupDiscovery(service, dto);
 
             _mocker.GetMock<ILoadBalancer>()
-                .Setup(l => l.GetNextService(It.IsAny<IEnumerable<ServiceRegistry>>()))
-                .Returns((ServiceRegistry?)null);
+                .Setup(l => l.GetNextServiceAsync(It.IsAny<IEnumerable<ServiceRegistry>>()))
+                .ReturnsAsync((ServiceRegistry?)null);
 
             Func<Task> act = async () => await _service.RoutingRequest(dto);
 
@@ -159,8 +159,8 @@ namespace Orcamentaria.APIGetaway.Test.Services
             SetupDiscovery(service, dto);
 
             _mocker.GetMock<ILoadBalancer>()
-                .Setup(l => l.GetNextService(It.IsAny<IEnumerable<ServiceRegistry>>()))
-                .Returns(service);
+                .Setup(l => l.GetNextServiceAsync(It.IsAny<IEnumerable<ServiceRegistry>>()))
+                .ReturnsAsync(service);
 
             Func<Task> act = async () => await _service.RoutingRequest(dto);
 
@@ -176,8 +176,8 @@ namespace Orcamentaria.APIGetaway.Test.Services
             SetupDiscovery(service, dto);
 
             _mocker.GetMock<ILoadBalancer>()
-                .Setup(l => l.GetNextService(It.IsAny<IEnumerable<ServiceRegistry>>()))
-                .Returns(service);
+                .Setup(l => l.GetNextServiceAsync(It.IsAny<IEnumerable<ServiceRegistry>>()))
+                .ReturnsAsync(service);
 
             _mocker.GetMock<IUserAuthContext>()
                 .Setup(c => c.BearerToken)
@@ -211,8 +211,8 @@ namespace Orcamentaria.APIGetaway.Test.Services
             SetupDiscovery(service, dto);
 
             _mocker.GetMock<ILoadBalancer>()
-                .Setup(l => l.GetNextService(It.IsAny<IEnumerable<ServiceRegistry>>()))
-                .Returns(service);
+                .Setup(l => l.GetNextServiceAsync(It.IsAny<IEnumerable<ServiceRegistry>>()))
+                .ReturnsAsync(service);
 
             _mocker.GetMock<IUserAuthContext>()
                 .Setup(c => c.BearerToken)
@@ -256,8 +256,8 @@ namespace Orcamentaria.APIGetaway.Test.Services
             SetupDiscovery(service, dto);
 
             _mocker.GetMock<ILoadBalancer>()
-                .Setup(l => l.GetNextService(It.IsAny<IEnumerable<ServiceRegistry>>()))
-                .Returns(service);
+                .Setup(l => l.GetNextServiceAsync(It.IsAny<IEnumerable<ServiceRegistry>>()))
+                .ReturnsAsync(service);
 
             _mocker.GetMock<IHttpClientService>()
                 .Setup(h => h.SendAsync<dynamic>(It.IsAny<string>(), It.IsAny<EndpointRequest>(), It.IsAny<OptionsRequest>()))

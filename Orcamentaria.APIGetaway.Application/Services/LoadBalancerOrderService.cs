@@ -1,4 +1,5 @@
-﻿using Orcamentaria.APIGetaway.Domain.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Orcamentaria.APIGetaway.Domain.Services;
 using Orcamentaria.Lib.Domain.Models;
 using Orcamentaria.Lib.Domain.Services;
 
@@ -6,19 +7,20 @@ namespace Orcamentaria.APIGetaway.Application.Services
 {
     public class LoadBalancerOrderService : ILoadBalancer
     {
-        private readonly IMemoryCacheService _memoryCacheService;
+        private readonly ICacheService _cache;
 
-        public LoadBalancerOrderService(IMemoryCacheService memoryCacheService)
+        public LoadBalancerOrderService([FromKeyedServices("memory")] ICacheService cache)
         {
-            _memoryCacheService = memoryCacheService;
+            _cache = cache;
         }
 
-        public ServiceRegistry? GetNextService(IEnumerable<ServiceRegistry> services)
+        public async Task<ServiceRegistry?> GetNextServiceAsync(IEnumerable<ServiceRegistry> services)
         {
             if (!services.Any())
                 return null;
 
-            if (!_memoryCacheService.GetMemoryCache(services.First().ServiceName, out string lastOrder))
+            var lastOrder = await _cache.GetAsync<string>(services.First().ServiceName);
+            if (lastOrder is null)
                 return services.OrderBy(x => x.Order).First();
 
             var serviceSelected = services.FirstOrDefault(x => x.Order > int.Parse(lastOrder));
@@ -26,9 +28,9 @@ namespace Orcamentaria.APIGetaway.Application.Services
             return serviceSelected is null ? services.OrderBy(x => x.Order).First() : serviceSelected;
         }
 
-        public void RegisterUsedService<T>(ServiceRegistry service, HttpResponse<T> response)
+        public async Task RegisterUsedServiceAsync<T>(ServiceRegistry service, HttpResponse<T> response)
         {
-            _memoryCacheService.SetMemoryCache(service.ServiceName, response.Endpoint.Order.ToString());
+            await _cache.SetAsync(service.ServiceName, response.Endpoint.Order.ToString());
         }
     }
 }

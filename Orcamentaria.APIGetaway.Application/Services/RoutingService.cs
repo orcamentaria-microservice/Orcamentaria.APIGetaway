@@ -40,7 +40,7 @@ namespace Orcamentaria.APIGetaway.Application.Services
                 if (!responseDiscover.Success)
                     throw new UnexpectedException(responseDiscover.Message);
 
-                var service = _loadBalancer.GetNextService(responseDiscover.Data.Where(x => x.State.StateId == StateEnum.UP));
+                var service = await _loadBalancer.GetNextServiceAsync(responseDiscover.Data.Where(x => x.State.StateId == StateEnum.UP));
 
                 if (service is null)
                     throw new ServiceUnavailableException($"Nenhum instância do serviço {dto.ServiceName} ativa.");
@@ -70,7 +70,7 @@ namespace Orcamentaria.APIGetaway.Application.Services
                         Content = dto.Content
                     });
 
-                _loadBalancer.RegisterUsedService(service, response);
+                await _loadBalancer.RegisterUsedServiceAsync(service, response);
 
                 return response.Content;
             }
