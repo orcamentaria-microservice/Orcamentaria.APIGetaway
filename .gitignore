@@ -113,3 +113,13 @@ TestResults/
 
 ## dotnet tools
 .tools/
+
+## Security (F0-04)
+appsettings.*.local.json
+.env
+.env.*
+!.env.example
+secrets/
+*private*.pem
+*-signing-key.pem
+local-packages/

@@ -158,6 +158,21 @@ A aplicação usa o modelo padrão de configuração do ASP.NET Core (`appsettin
 
 ---
 
+## Configuração local
+
+Nenhum valor real deve existir nos arquivos versionados. Configure via `dotnet user-secrets` ou variáveis de ambiente:
+
+```bash
+dotnet user-secrets init --project Orcamentaria.APIGetaway.API
+dotnet user-secrets set "MessageBrokerConfiguration:UserName" "<usuario-rabbitmq>" --project Orcamentaria.APIGetaway.API
+dotnet user-secrets set "MessageBrokerConfiguration:Password" "<senha-rabbitmq>" --project Orcamentaria.APIGetaway.API
+dotnet user-secrets set "ServiceRegistryConfiguration:BaseUrl" "http://localhost:3018" --project Orcamentaria.APIGetaway.API
+```
+
+Ou crie `Orcamentaria.APIGetaway.API/appsettings.Development.json` (já ignorado pelo `.gitignore`) com os valores locais. Nunca commite esse arquivo.
+
+---
+
 ## ▶️ Como Executar
 
 ### Pré-requisitos
