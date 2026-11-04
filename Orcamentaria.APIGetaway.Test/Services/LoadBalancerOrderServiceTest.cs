@@ -23,20 +23,20 @@ namespace Orcamentaria.APIGetaway.Test.Services
             _service = _mocker.CreateInstance<Application.Services.LoadBalancerOrderService>();
         }
 
-        #region GetNextService
+        #region GetNextServiceAsync
 
         [Fact]
-        public void GetNextService_WhenServicesIsEmpty_ReturnsNull()
+        public async Task GetNextServiceAsync_WhenServicesIsEmpty_ReturnsNull()
         {
             var services = new List<ServiceRegistry>();
 
-            var response = _service.GetNextService(services);
+            var response = await _service.GetNextServiceAsync(services);
 
             response.Should().BeNull();
         }
 
         [Fact]
-        public void GetNextService_WhenCacheMiss_ReturnsFirstServiceOrderedByOrder()
+        public async Task GetNextServiceAsync_WhenCacheMiss_ReturnsFirstServiceOrderedByOrder()
         {
             var services = new List<ServiceRegistry>
             {
@@ -45,19 +45,18 @@ namespace Orcamentaria.APIGetaway.Test.Services
                 _fixture.CreateEntity(3, 2, StateEnum.UP)
             };
 
-            string? cachedValue = null;
-            _mocker.GetMock<IMemoryCacheService>()
-                .Setup(m => m.GetMemoryCache(services.First().ServiceName, out cachedValue))
-                .Returns(false);
+            _mocker.GetMock<ICacheService>()
+                .Setup(m => m.GetAsync<string>(services.First().ServiceName, It.IsAny<CancellationToken>()))
+                .ReturnsAsync((string?)null);
 
-            var response = _service.GetNextService(services);
+            var response = await _service.GetNextServiceAsync(services);
 
             response.Should().NotBeNull();
             response!.Order.Should().Be(1);
         }
 
         [Fact]
-        public void GetNextService_WhenCacheHitAndHigherOrderExists_ReturnsFirstServiceWithOrderGreaterThanCached()
+        public async Task GetNextServiceAsync_WhenCacheHitAndHigherOrderExists_ReturnsFirstServiceWithOrderGreaterThanCached()
         {
             var services = new List<ServiceRegistry>
             {
@@ -67,19 +66,18 @@ namespace Orcamentaria.APIGetaway.Test.Services
                 _fixture.CreateEntity(4, 4, StateEnum.UP)
             };
 
-            string? cachedValue = "2";
-            _mocker.GetMock<IMemoryCacheService>()
-                .Setup(m => m.GetMemoryCache(services.First().ServiceName, out cachedValue))
-                .Returns(true);
+            _mocker.GetMock<ICacheService>()
+                .Setup(m => m.GetAsync<string>(services.First().ServiceName, It.IsAny<CancellationToken>()))
+                .ReturnsAsync("2");
 
-            var response = _service.GetNextService(services);
+            var response = await _service.GetNextServiceAsync(services);
 
             response.Should().NotBeNull();
             response!.Order.Should().Be(3);
         }
 
         [Fact]
-        public void GetNextService_WhenCacheHitButNoHigherOrderExists_ReturnsFirstServiceOrderedByOrder()
+        public async Task GetNextServiceAsync_WhenCacheHitButNoHigherOrderExists_ReturnsFirstServiceOrderedByOrder()
         {
             var services = new List<ServiceRegistry>
             {
@@ -88,12 +86,11 @@ namespace Orcamentaria.APIGetaway.Test.Services
                 _fixture.CreateEntity(3, 1, StateEnum.UP)
             };
 
-            string? cachedValue = "3";
-            _mocker.GetMock<IMemoryCacheService>()
-                .Setup(m => m.GetMemoryCache(services.First().ServiceName, out cachedValue))
-                .Returns(true);
+            _mocker.GetMock<ICacheService>()
+                .Setup(m => m.GetAsync<string>(services.First().ServiceName, It.IsAny<CancellationToken>()))
+                .ReturnsAsync("3");
 
-            var response = _service.GetNextService(services);
+            var response = await _service.GetNextServiceAsync(services);
 
             response.Should().NotBeNull();
             response!.Order.Should().Be(1);
@@ -101,10 +98,10 @@ namespace Orcamentaria.APIGetaway.Test.Services
 
         #endregion
 
-        #region RegisterUsedService
+        #region RegisterUsedServiceAsync
 
         [Fact]
-        public void RegisterUsedService_WhenCalled_SetsMemoryCacheWithServiceNameAndEndpointOrder()
+        public async Task RegisterUsedServiceAsync_WhenCalled_SetsMemoryCacheWithServiceNameAndEndpointOrder()
         {
             var service = _fixture.CreateEntity(1);
             var endpoint = new EndpointRequest
@@ -119,10 +116,10 @@ namespace Orcamentaria.APIGetaway.Test.Services
                 Endpoint = endpoint
             };
 
-            _service.RegisterUsedService(service, response);
+            await _service.RegisterUsedServiceAsync(service, response);
 
-            _mocker.GetMock<IMemoryCacheService>()
-                .Verify(m => m.SetMemoryCache(service.ServiceName, endpoint.Order.ToString()), Times.Once);
+            _mocker.GetMock<ICacheService>()
+                .Verify(m => m.SetAsync(service.ServiceName, endpoint.Order.ToString(), null, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         #endregion

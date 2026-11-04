@@ -4,7 +4,7 @@ namespace Orcamentaria.APIGetaway.Domain.Services
 {
     public interface ILoadBalancer
     {
-        ServiceRegistry? GetNextService(IEnumerable<ServiceRegistry> services);
-        void RegisterUsedService<T>(ServiceRegistry service, HttpResponse<T> response);
+        Task<ServiceRegistry?> GetNextServiceAsync(IEnumerable<ServiceRegistry> services);
+        Task RegisterUsedServiceAsync<T>(ServiceRegistry service, HttpResponse<T> response);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Orcamentaria.APIGetaway.Domain.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Orcamentaria.APIGetaway.Domain.Services;
 using Orcamentaria.Lib.Domain.Models;
 using Orcamentaria.Lib.Domain.Services;
 
@@ -6,14 +7,14 @@ namespace Orcamentaria.APIGetaway.Application.Services
 {
     public class LoadBalancerResponseTimeService : ILoadBalancer
     {
-        private readonly IMemoryCacheService _memoryCacheService;
+        private readonly ICacheService _cache;
 
-        public LoadBalancerResponseTimeService(IMemoryCacheService memoryCacheService)
+        public LoadBalancerResponseTimeService([FromKeyedServices("memory")] ICacheService cache)
         {
-            _memoryCacheService = memoryCacheService;
+            _cache = cache;
         }
 
-        public ServiceRegistry? GetNextService(IEnumerable<ServiceRegistry> services)
+        public async Task<ServiceRegistry?> GetNextServiceAsync(IEnumerable<ServiceRegistry> services)
         {
             if (!services.Any())
                 return null;
@@ -22,10 +23,11 @@ namespace Orcamentaria.APIGetaway.Application.Services
 
             foreach (var service in services)
             {
-                if (!_memoryCacheService.GetMemoryCache(FormatKey(service), out string responseTimeService))
+                var responseTimeStr = await _cache.GetAsync<string>(FormatKey(service));
+                if (responseTimeStr is null)
                     return service;
 
-                servicesResponseTime.Add(service.Id, float.Parse(responseTimeService));
+                servicesResponseTime.Add(service.Id, float.Parse(responseTimeStr));
             }
 
             var serviceIdSeletected = servicesResponseTime.OrderBy(x => x.Value).FirstOrDefault().Key;
@@ -33,9 +35,9 @@ namespace Orcamentaria.APIGetaway.Application.Services
             return services.First(x => x.Id == serviceIdSeletected);
         }
 
-        public void RegisterUsedService<T>(ServiceRegistry service, HttpResponse<T> response)
+        public async Task RegisterUsedServiceAsync<T>(ServiceRegistry service, HttpResponse<T> response)
         {
-            _memoryCacheService.SetMemoryCache(FormatKey(service), response.ResponseTime.TotalMilliseconds.ToString());
+            await _cache.SetAsync(FormatKey(service), response.ResponseTime.TotalMilliseconds.ToString());
         }
 
         private string FormatKey(ServiceRegistry service)
